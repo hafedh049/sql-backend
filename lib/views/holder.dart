@@ -83,7 +83,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: _selectedScreen == item["title"] ? blackColor : transparentColor),
-                          child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: blackColor)),
+                          child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: scaffoldColor)),
                         ),
                       ),
                   ],
