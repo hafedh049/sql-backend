@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'views/users_list.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const Main());
 }
 
