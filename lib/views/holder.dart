@@ -5,10 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/shared.dart';
 import 'global_settings.dart';
+import 'users_list.dart';
 
 class Holder extends StatefulWidget {
-  const Holder({super.key, required this.storeID});
-  final String storeID;
+  const Holder({super.key});
   @override
   State<Holder> createState() => _HolderState();
 }
@@ -29,7 +29,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
         "title": "Global Settings",
       },
       <String, dynamic>{
-        "screen": UsersList(),
+        "screen": const UsersList(),
         "title": "Users List",
       },
     ];
@@ -82,7 +82,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
                         },
                         child: Container(
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: _selectedScreen == item["title"] ? darkColor : transparentColor),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: _selectedScreen == item["title"] ? blackColor : transparentColor),
                           child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: blackColor)),
                         ),
                       ),

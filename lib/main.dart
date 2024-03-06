@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'views/users_list.dart';
+import 'package:sql_admin/views/holder.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +11,6 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false, home: Home());
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: Holder());
   }
 }

@@ -21,28 +21,31 @@ class _GlobalSettingsState extends State<GlobalSettings> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             for (final MapEntry<String, dynamic> item in _settings.entries) ...<Widget>[
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor.withOpacity(.1)),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor.withOpacity(.3)),
-                      child: Text(item.key, style: GoogleFonts.itim(fontSize: 16, color: blackColor, fontWeight: FontWeight.w500)),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor.withOpacity(.3)),
-                      child: Text(item.value.toString(), style: GoogleFonts.itim(fontSize: 16, color: blackColor, fontWeight: FontWeight.w500)),
-                    ),
-                  ],
-                ),
-              ).animate().fadeIn(
-                    duration: 500.ms,
-                    delay: (100 * _settings.keys.toList().indexOf(item.key)).ms,
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: blackColor.withOpacity(.1)),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor.withOpacity(.3)),
+                        child: Text(item.key, style: GoogleFonts.itim(fontSize: 16, color: blackColor, fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor.withOpacity(.3)),
+                        child: Text(item.value.toString(), style: GoogleFonts.itim(fontSize: 16, color: blackColor, fontWeight: FontWeight.w500)),
+                      ),
+                    ],
                   ),
+                ).animate().fadeIn(
+                      duration: 500.ms,
+                      delay: (100 * _settings.keys.toList().indexOf(item.key)).ms,
+                    ),
+              ),
               const SizedBox(height: 20),
             ],
           ],
