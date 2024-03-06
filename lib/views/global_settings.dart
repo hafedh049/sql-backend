@@ -77,7 +77,7 @@ class _EditUserState extends State<GlobalSettings> {
                             contentPadding: const EdgeInsets.all(20),
                             focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                             border: InputBorder.none,
-                            label: item["hint"],
+                            labelText: item["hint"],
                             labelStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                             hintText: item["hint"],
                             hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
