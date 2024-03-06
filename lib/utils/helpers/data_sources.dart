@@ -1,71 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:sql_admin/utils/shared.dart';
 
 import '../../models/products_model.dart';
+import '../../views/edit_user.dart';
 
-class RestorableProductSelections extends RestorableProperty<Set<int>> {
-  Set<int> _productSelections = <int>{};
-
-  bool isSelected(int index) => _productSelections.contains(index);
+class RestorableUserSelections extends RestorableProperty<Set<int>> {
+  Set<int> _userSelections = <int>{};
 
   @override
-  Set<int> createDefaultValue() => _productSelections;
+  Set<int> createDefaultValue() => _userSelections;
 
   @override
   Set<int> fromPrimitives(Object? data) {
     final selectedItemIndices = data as List<dynamic>;
-    _productSelections = <int>{...selectedItemIndices.map<int>((dynamic id) => id as int)};
-    return _productSelections;
+    _userSelections = <int>{...selectedItemIndices.map<int>((dynamic id) => id as int)};
+    return _userSelections;
   }
 
   @override
   void initWithValue(Set<int> value) {
-    _productSelections = value;
+    _userSelections = value;
   }
 
   @override
-  Object toPrimitives() => _productSelections.toList();
+  Object toPrimitives() => _userSelections.toList();
 }
 
-class ProductDataSource extends DataTableSource {
-  ProductDataSource.empty(this.context) {
-    products = <Product>[];
+class UsersDataSource extends DataTableSource {
+  UsersDataSource.empty(this.context) {
+    users = <UserModel>[];
   }
 
-  ProductDataSource(this.context, this.products, [this.hasRowTaps = true, this.hasRowHeightOverrides = true, this.hasZebraStripes = true]);
+  UsersDataSource(this.context, this.users);
 
   final BuildContext context;
-  late List<Product> products;
-  bool hasRowTaps = true;
-  bool hasRowHeightOverrides = true;
-  bool hasZebraStripes = true;
+  late List<UserModel> users;
+  final bool hasRowTaps = false;
+  final bool hasRowHeightOverrides = true;
+  final bool hasZebraStripes = true;
 
   @override
   DataRow2 getRow(int index, [Color? color]) {
     assert(index >= 0);
-    if (index >= products.length) throw 'index > _products.length';
-    final Product product = products[index];
+    if (index >= users.length) throw 'index > _products.length';
+    final UserModel user = users[index];
     return DataRow2.byIndex(
       index: index,
       color: color != null ? MaterialStateProperty.all(color) : (hasZebraStripes && index.isEven ? MaterialStateProperty.all(Theme.of(context).highlightColor) : null),
-      onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row') : null,
       cells: <DataCell>[
-        for (final String item in product.columns) DataCell(Text(item)),
+        DataCell(
+          Text(user.uid),
+          onTap: () => showModalBottomSheet(backgroundColor: whiteColor, context: context, builder: (BuildContext context) => EditUser(user: user)),
+        ),
+        DataCell(
+          Text(user.username),
+          onTap: () => showModalBottomSheet(context: context, builder: (BuildContext context) => EditUser(user: user)),
+        ),
+        DataCell(
+          Text(user.password),
+          onTap: () => showModalBottomSheet(context: context, builder: (BuildContext context) => EditUser(user: user)),
+        )
       ],
     );
   }
 
   @override
-  int get rowCount => products.length;
+  int get rowCount => users.length;
 
   @override
   bool get isRowCountApproximate => false;
 
   @override
-  int get selectedRowCount => products.length;
-}
-
-_showSnackbar(BuildContext context, String text, [Color? color]) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: color, duration: 1.seconds, content: Text(text)));
+  int get selectedRowCount => 0;
 }

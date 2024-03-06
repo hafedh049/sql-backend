@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sql_admin/views/add_user.dart';
 
 import '../utils/shared.dart';
+import 'global_settings.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key});
@@ -34,7 +36,7 @@ class _SideMenuState extends State<SideMenu> {
               backgroundColor: purpleColor,
               transitionType: TransitionType.TOP_TO_BOTTOM,
               textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-              onPress: () {},
+              onPress: () => showModalBottomSheet(context: context, builder: (BuildContext context) => const AddUser()),
             ),
             const SizedBox(height: 20),
             AnimatedButton(
@@ -48,7 +50,7 @@ class _SideMenuState extends State<SideMenu> {
               backgroundColor: purpleColor,
               transitionType: TransitionType.TOP_TO_BOTTOM,
               textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-              onPress: () {},
+              onPress: () => showModalBottomSheet(context: context, builder: (BuildContext context) => const GlobalSettings()),
             ),
           ],
         ),
