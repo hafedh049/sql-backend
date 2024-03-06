@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class UsersList extends StatefulWidget {
+  const UsersList({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<UsersList> createState() => UsersListState();
 }
 
-class _HomeState extends State<Home> {
+class UsersListState extends State<UsersList> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[],
+      ),
+    );
   }
 }

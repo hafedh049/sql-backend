@@ -4,6 +4,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/shared.dart';
+import 'global_settings.dart';
 
 class Holder extends StatefulWidget {
   const Holder({super.key, required this.storeID});
@@ -24,7 +25,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
   void initState() {
     _screens = <Map<String, dynamic>>[
       <String, dynamic>{
-        "screen": GlobalSettings(),
+        "screen": const GlobalSettings(),
         "title": "Global Settings",
       },
       <String, dynamic>{
