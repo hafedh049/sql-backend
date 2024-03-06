@@ -21,6 +21,9 @@ class _GlobalSettingsState extends State<GlobalSettings> {
             for (final MapEntry<String, dynamic> item in _settings.entries)
               Container(
                 padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: <Widget>[],
+                ),
               ).animate().fadeIn(
                     duration: 500.ms,
                     delay: (100 * _settings.keys.toList().indexOf(item.key)).ms,
