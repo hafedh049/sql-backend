@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:sql_admin/models/products_model.dart';
+import 'package:sql_admin/models/user_model.dart';
 import 'package:sql_admin/utils/shared.dart';
 
 import '../utils/callbacks.dart';

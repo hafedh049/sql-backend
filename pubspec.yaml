@@ -21,6 +21,7 @@ dependencies:
   icons_plus: ^5.0.0
   flutter_animated_button: ^2.0.3
   animated_loading_border: ^0.0.2
+  dio: ^5.4.1
 
 dev_dependencies:
   flutter_test:

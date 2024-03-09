@@ -1,4 +1,5 @@
 import 'package:animated_loading_border/animated_loading_border.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -19,7 +20,6 @@ class _EditUserState extends State<AddUser> {
   bool _buttonState = false;
 
   final GlobalKey<State> _passKey = GlobalKey<State>();
-  final TextEditingController _uidController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
 
@@ -33,9 +33,7 @@ class _EditUserState extends State<AddUser> {
 
   Future<void> _addUser() async {
     _buttonState = false;
-    if (_uidController.text.isEmpty) {
-      showToast("Please enter a correct uid", redColor);
-    } else if (_passwordController.text.isEmpty) {
+    if (_passwordController.text.isEmpty) {
       showToast("Please enter a correct password", redColor);
     } else if (_usernameController.text.isEmpty) {
       showToast("Please enter a correct username", redColor);
@@ -43,13 +41,25 @@ class _EditUserState extends State<AddUser> {
       showToast("Please fill all the queries fields", redColor);
     } else {
       _buttonState = true;
+      try {
+        await Dio().post(
+          "http://192.168.0.179:4444/createUser",
+          data: <String, String>{
+            "username": _usernameController.text,
+            "password": _passwordController.text,
+          },
+        );
+        showToast("USER CREATED", greenColor);
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     }
   }
 
   @override
   void dispose() {
-    _uidController.dispose();
     _passwordController.dispose();
     _usernameController.dispose();
     for (final Map<String, dynamic> item in _queriesControllers) {
@@ -76,29 +86,6 @@ class _EditUserState extends State<AddUser> {
               children: <Widget>[
                 Text("Welcome", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: blackColor)),
                 Container(width: MediaQuery.sizeOf(context).width, height: .3, color: blackColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                const SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
-                  child: StatefulBuilder(
-                    builder: (BuildContext context, void Function(void Function()) _) {
-                      return TextField(
-                        onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                        controller: _uidController,
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(20),
-                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                          border: InputBorder.none,
-                          hintText: 'UID',
-                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                          prefixIcon: _uidController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                        ),
-                        cursorColor: purpleColor,
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
                   child: StatefulBuilder(

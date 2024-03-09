@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:sql_admin/utils/shared.dart';
 
-import '../../models/products_model.dart';
+import '../../models/user_model.dart';
 import '../../views/edit_user.dart';
 
 class RestorableUserSelections extends RestorableProperty<Set<int>> {
@@ -60,7 +60,15 @@ class UsersDataSource extends DataTableSource {
         DataCell(
           Text(user.password),
           onTap: () => showModalBottomSheet(context: context, builder: (BuildContext context) => EditUser(user: user)),
-        )
+        ),
+        DataCell(
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: user.authorized ? greenColor : redColor, borderRadius: BorderRadius.circular(5)),
+            child: Text(user.authorized ? "AUTHORIZED" : "UNAUTHORIZED"),
+          ),
+          onTap: () => showModalBottomSheet(context: context, builder: (BuildContext context) => EditUser(user: user)),
+        ),
       ],
     );
   }

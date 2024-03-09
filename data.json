@@ -1,0 +1,35 @@
+{
+    "users": {
+        "username1": {
+            "id": "0",
+            "password": "pwd",
+            "querys": {
+                "1": "select * from user",
+                "2": "select * from clients"
+            },
+            "queryWithDate": "select * from data where x<%FROM% and x>%TO%"
+        },
+        "username2": {
+            "id": "d1530027-8f4e-4fac-a77a-0b20cacdb16d",
+            "password": "pwdd",
+            "querys": {
+                "0": "Select * from data2",
+                "1": "Select * from data"
+            },
+            "queryWithDate": ""
+        },
+        "username3": {
+            "id": "7a375fe2-5880-4da4-b6d9-597dd730030c",
+            "password": "pwd",
+            "querys": {},
+            "queryWithDate": ""
+        },
+        "wawa": {
+            "id": "e4afcfb9-6398-4399-9be5-01e8875bddeb",
+            "password": "wawa",
+            "querys": {},
+            "queryWithDate": ""
+        }
+    },
+    "totalQuerys": 10
+}
