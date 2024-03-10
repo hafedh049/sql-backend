@@ -10,43 +10,59 @@ import 'package:sql_admin/utils/shared.dart';
 import '../../../utils/callbacks.dart';
 
 class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+  const AddUser({super.key, required this.callback});
+  final void Function(void Function()) callback;
   @override
   State<AddUser> createState() => _EditUserState();
 }
 
 class _EditUserState extends State<AddUser> {
   bool _passwordState = false;
-  bool _buttonState = false;
 
-  final GlobalKey<State> _passKey = GlobalKey<State>();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _queriesDate = TextEditingController();
 
-  final List<Map<String, dynamic>> _queriesControllers = List<Map<String, dynamic>>.generate(
-    7,
-    (int index) => <String, dynamic>{
-      "hint": "Query ${index + 1}",
-      "controller": TextEditingController(),
-    },
-  );
+  List<Map<String, dynamic>> _queriesControllers = <Map<String, dynamic>>[];
+
+  Future<int> _load() async {
+    final response = await Dio().get("$url/totalQuerys");
+    if (response.statusCode == 200) {
+      return response.data['totalQuerys'];
+    }
+    return 0;
+  }
 
   Future<void> _addUser() async {
-    _buttonState = false;
     if (_passwordController.text.isEmpty) {
       showToast("Please enter a correct password", redColor);
     } else if (_usernameController.text.isEmpty) {
       showToast("Please enter a correct username", redColor);
-    } else if (_queriesControllers.every((Map<String, dynamic> element) => element["controller"].text.isEmpty)) {
-      showToast("Please fill all the queries fields", redColor);
     } else {
-      _buttonState = true;
       try {
         await Dio().post(
-          "http://192.168.0.179:4444/createUser",
+          "$url/createUser",
           data: <String, String>{
             "username": _usernameController.text,
             "password": _passwordController.text,
+          },
+        );
+        await Future.delayed(100.ms);
+        Dio().post(
+          '$url/addOrUpdateUserQuerys',
+          data: <String, dynamic>{
+            'username': _usernameController.text,
+            'querys': <String, dynamic>{
+              for (final Map<String, dynamic> item in _queriesControllers) _queriesControllers.indexOf(item).toString(): item['controller'].text,
+            },
+          },
+        );
+        await Future.delayed(100.ms);
+        Dio().post(
+          '$url/queryWithTime',
+          data: <String, dynamic>{
+            'username': _usernameController.text,
+            'newValue': _queriesDate.text,
           },
         );
         showToast("USER CREATED", greenColor);
@@ -55,6 +71,7 @@ class _EditUserState extends State<AddUser> {
       }
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
+      widget.callback(() {});
     }
   }
 
@@ -62,6 +79,7 @@ class _EditUserState extends State<AddUser> {
   void dispose() {
     _passwordController.dispose();
     _usernameController.dispose();
+    _queriesDate.dispose();
     for (final Map<String, dynamic> item in _queriesControllers) {
       item["controller"].dispose();
     }
@@ -84,7 +102,7 @@ class _EditUserState extends State<AddUser> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text("Welcome", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: blackColor)),
+                Text("CREATE USER ACCOUNT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: blackColor)),
                 Container(width: MediaQuery.sizeOf(context).width, height: .3, color: blackColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 Container(
                   decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
@@ -132,58 +150,105 @@ class _EditUserState extends State<AddUser> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                for (final Map<String, dynamic> item in _queriesControllers) ...<Widget>[
-                  Container(
-                    decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
-                    child: StatefulBuilder(
-                      builder: (BuildContext context, void Function(void Function()) _) {
-                        return TextField(
-                          onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                          controller: item["controller"],
-                          style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(20),
-                            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                            border: InputBorder.none,
-                            hintText: item["hint"],
-                            hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                            prefixIcon: item["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                          ),
-                          cursorColor: purpleColor,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
-                StatefulBuilder(
-                  key: _passKey,
-                  builder: (BuildContext context, void Function(void Function()) _) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        IgnorePointer(
-                          ignoring: _buttonState,
-                          child: AnimatedButton(
-                            width: 150,
-                            height: 40,
-                            text: _buttonState ? "WAIT..." : 'CONTINUE',
-                            selectedTextColor: purpleColor.withOpacity(.3),
-                            animatedOn: AnimatedOn.onHover,
-                            animationDuration: 500.ms,
-                            isReverse: true,
-                            selectedBackgroundColor: blackColor,
-                            backgroundColor: purpleColor,
-                            transitionType: TransitionType.TOP_TO_BOTTOM,
-                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                            onPress: () async => await _addUser(),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        AnimatedOpacity(opacity: _buttonState ? 1 : 0, duration: 300.ms, child: const Icon(FontAwesome.bookmark_solid, color: purpleColor, size: 35)),
-                      ],
-                    );
+                FutureBuilder<int>(
+                  future: _load(),
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    if (snapshot.hasData) {
+                      _queriesControllers = List<Map<String, dynamic>>.generate(
+                        snapshot.data!,
+                        (int index) => <String, dynamic>{
+                          "hint": "Query ${index + 1}",
+                          "controller": TextEditingController(),
+                        },
+                      );
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          for (final Map<String, dynamic> item in _queriesControllers) ...<Widget>[
+                            Container(
+                              decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
+                              child: StatefulBuilder(
+                                builder: (BuildContext context, void Function(void Function()) _) {
+                                  return TextField(
+                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                    controller: item["controller"],
+                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.all(20),
+                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                      border: InputBorder.none,
+                                      hintText: item["hint"],
+                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      prefixIcon: item["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                    ),
+                                    cursorColor: purpleColor,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ],
+                      );
+                    }
+                    return const SizedBox();
                   },
+                ),
+                Container(
+                  decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
+                  child: StatefulBuilder(
+                    builder: (BuildContext context, void Function(void Function()) _) {
+                      return TextField(
+                        onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                        controller: _queriesDate,
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(20),
+                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                          border: InputBorder.none,
+                          hintText: 'Date Query',
+                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                          prefixIcon: _queriesDate.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                        ),
+                        cursorColor: purpleColor,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: <Widget>[
+                    AnimatedButton(
+                      width: 150,
+                      height: 40,
+                      text: 'CREATE USER',
+                      selectedTextColor: purpleColor.withOpacity(.3),
+                      animatedOn: AnimatedOn.onHover,
+                      animationDuration: 500.ms,
+                      isReverse: true,
+                      selectedBackgroundColor: blackColor,
+                      backgroundColor: purpleColor,
+                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                      onPress: () async => await _addUser(),
+                    ),
+                    const Spacer(),
+                    AnimatedButton(
+                      width: 150,
+                      height: 40,
+                      text: 'CANCEL',
+                      selectedTextColor: whiteColor,
+                      animatedOn: AnimatedOn.onHover,
+                      animationDuration: 500.ms,
+                      isReverse: true,
+                      selectedBackgroundColor: redColor,
+                      backgroundColor: redColor,
+                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                      onPress: () => Navigator.pop(context),
+                    ),
+                  ],
                 ),
               ],
             ),

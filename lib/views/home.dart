@@ -14,15 +14,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: whiteColor,
       body: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Row(
           children: <Widget>[
-            Expanded(child: UsersList()),
-            SizedBox(width: 20),
-            SideMenu(),
+            const Expanded(child: UsersList()),
+            const SizedBox(width: 20),
+            SideMenu(callback: setState),
           ],
         ),
       ),

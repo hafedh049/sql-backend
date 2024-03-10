@@ -66,7 +66,7 @@ def SaveJsonData(
 def deleteFromJsonFile(file, key):
     with open(file, "r", encoding="utf-8") as f:
         data = json.load(f)
-    del data[key]
+    del data["users"][key]
     with open(file, "w", encoding="utf-8") as f:
         json.dump(data, f)
 
@@ -86,7 +86,13 @@ def createUser(username: str, password: str) -> bool:
     data = loadJsonData(dataFile)["users"]
     if username not in list(data.keys()):
         uid = str(uuid.uuid4())
-        value = {"id": uid, "password": password, "querys": {}, "queryWithDate": ""}
+        value = {
+            "id": uid,
+            "password": password,
+            "querys": {},
+            "queryWithDate": "",
+            "authorized": True,
+        }
         SaveJsonData(
             dataFile,
             "users",
@@ -131,16 +137,16 @@ def returnUserQuerys(username: str) -> dict:
         return False, "User Not Exist"
 
 
-def updateOrAddQuery(username: str, QueryID: str, newValue: str) -> bool:
+def updateOrAddQuery(username: str, querys: dict) -> bool:
     data = loadJsonData(dataFile)["users"]
     if username in list(data.keys()):
         SaveJsonData(
             dataFile,
             "users",
-            newValue,
+            querys,
             subclass=username,
             subclass2="querys",
-            subclass3=QueryID,
+            subclass3=None,
             subclass4=None,
             addOrAppend="add",
         )
@@ -242,7 +248,6 @@ def createUserWeb():
         return jsonify(result), 404
 
 
-"""
 @app.route("/getUserQuerys", methods=["GET"])
 def getUserQuerys():
     user_data = request.json
@@ -258,29 +263,42 @@ def getUserQuerys():
             return jsonify(result), 404
     else:
         result = {"status": False, "message": "username is missing"}
-        return jsonify(result), 404"""
+        return jsonify(result), 404
+
+
+"""
+userResponce, Querys = updateOrAddQuery(username, QueryID, newValue)
+if userResponce == True:
+  result = {
+    'status': userResponce,
+    'Querys': Querys
+  }
+  return jsonify(result), 200
+else:
+      result = {
+        'status': userResponce,
+        'message': Querys
+      }
+      return jsonify(result), 404
+"""
 
 
 @app.route("/addOrUpdateUserQuerys", methods=["POST"])
 def addOrUpdateUserQuerys():
     user_data = request.json
     keys = list(user_data.keys())
-    if "username" in keys and "QueryID" in keys and "newValue" in keys:
+    if "username" in keys and "querys" in keys:
         username = user_data["username"]
-        QueryID = user_data["QueryID"]
-        newValue = user_data["newValue"]
-        userResponce, Querys = updateOrAddQuery(username, QueryID, newValue)
+        querys = user_data["querys"]
+        userResponce, Querys = updateOrAddQuery(username, querys)
         if userResponce == True:
-            result = {"status": userResponce, "Querys": Querys}
+            result = {"status": userResponce}
             return jsonify(result), 200
         else:
-            result = {"status": userResponce, "message": Querys}
+            result = {"status": userResponce}
             return jsonify(result), 404
     else:
-        result = {
-            "status": False,
-            "message": "username or QueryID or newValue is missing",
-        }
+        result = {"status": False, "message": "username or querys is missing"}
         return jsonify(result), 404
 
 
@@ -324,7 +342,6 @@ def getUsersList():
     return jsonify(result), 200
 
 
-"""
 @app.route("/getUserData", methods=["GET"])
 def getUserData():
     user_data = request.json
@@ -339,7 +356,69 @@ def getUserData():
             return jsonify(result), 404
     else:
         result = {"status": False, "message": "username is missing"}
-        return jsonify(result), 404"""
+        return jsonify(result), 404
 
 
-app.run(host="0.0.0.0", port=4444, debug=True)
+@app.route("/authorization", methods=["POST"])
+def authorization():
+    user_data = request.json
+    keys = list(user_data.keys())
+    users = loadJsonData(dataFile)["users"]
+    if "username" in keys:
+        if user_data["username"] in list(users.keys()):
+            if users[user_data["username"]]["authorized"]:
+                SaveJsonData(
+                    dataFile,
+                    "users",
+                    False,
+                    subclass=user_data["username"],
+                    subclass2="authorized",
+                    subclass3=None,
+                    subclass4=None,
+                    addOrAppend="add",
+                )
+            else:
+                SaveJsonData(
+                    dataFile,
+                    "users",
+                    True,
+                    subclass=user_data["username"],
+                    subclass2="authorized",
+                    subclass3=None,
+                    subclass4=None,
+                    addOrAppend="add",
+                )
+            users = loadJsonData(dataFile)["users"]
+            result = {"status": True, "data": users[user_data["username"]]}
+            return jsonify(result), 200
+        else:
+            result = {"status": False, "message": "user not exist"}
+            return jsonify(result), 404
+    else:
+        result = {"status": False, "message": "username is missing"}
+        return jsonify(result), 404
+
+
+@app.route("/removeUser", methods=["POST"])
+def removeUser():
+    user_data = request.json
+    keys = list(user_data.keys())
+    users = loadJsonData(dataFile)["users"]
+    if "username" in keys:
+        if user_data["username"] in list(users.keys()):
+            deleteFromJsonFile(dataFile, user_data["username"])
+            result = {"status": True}
+            return jsonify(result), 200
+        else:
+            result = {"status": False, "message": "user not exist"}
+            return jsonify(result), 404
+    else:
+        result = {"status": False, "message": "username is missing"}
+        return jsonify(result), 404
+
+
+app.run(host="0.0.0.0", port=80)
+
+"""
+réfrésh fl auth,add usér, délété usér, édit usér
+"""

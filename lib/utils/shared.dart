@@ -7,3 +7,5 @@ const Color greenColor = Colors.greenAccent;
 const Color blueColor = Colors.blueAccent;
 const Color redColor = Colors.red;
 const Color transparentColor = Colors.transparent;
+
+String url = '';

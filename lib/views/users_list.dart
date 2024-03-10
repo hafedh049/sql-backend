@@ -54,7 +54,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
 
   Future<List<UserModel>> _loadUsers() async {
     try {
-      return (((await Dio().get("http://192.168.0.179:4444/getUsersList")).data)["users"] as Map<String, dynamic>)
+      return (((await Dio().get("$url/getUsersList")).data)["users"] as Map<String, dynamic>)
           .entries
           .map(
             (MapEntry<String, dynamic> e) => UserModel.fromJson(
@@ -70,6 +70,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
           )
           .toList();
     } catch (e) {
+      print(e);
       return [];
     }
   }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:sql_admin/utils/shared.dart';
@@ -51,15 +52,15 @@ class UsersDataSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(
           Text(user.uid),
-          onTap: () => showModalBottomSheet(backgroundColor: whiteColor, context: context, builder: (BuildContext context) => EditUser(user: user)),
+          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))),
         ),
         DataCell(
           Text(user.username),
-          onTap: () => showModalBottomSheet(context: context, builder: (BuildContext context) => EditUser(user: user)),
+          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))),
         ),
         DataCell(
           Text(user.password),
-          onTap: () => showModalBottomSheet(context: context, builder: (BuildContext context) => EditUser(user: user)),
+          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))),
         ),
         DataCell(
           Container(
@@ -67,7 +68,9 @@ class UsersDataSource extends DataTableSource {
             decoration: BoxDecoration(color: user.authorized ? greenColor : redColor, borderRadius: BorderRadius.circular(5)),
             child: Text(user.authorized ? "AUTHORIZED" : "UNAUTHORIZED"),
           ),
-          onTap: () => showModalBottomSheet(context: context, builder: (BuildContext context) => EditUser(user: user)),
+          onTap: () {
+            Dio().post("$url/authorization", data: {"username": user.username});
+          },
         ),
       ],
     );

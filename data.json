@@ -2,14 +2,16 @@
     "users": {
         "username1": {
             "id": "0",
+            "authorized": true,
             "password": "pwd",
             "querys": {
-                "1": "select * from user",
-                "2": "select * from clients"
+                "0": "select * from user",
+                "1": "select * from clients"
             },
             "queryWithDate": "select * from data where x<%FROM% and x>%TO%"
         },
         "username2": {
+            "authorized": true,
             "id": "d1530027-8f4e-4fac-a77a-0b20cacdb16d",
             "password": "pwdd",
             "querys": {
@@ -19,17 +21,31 @@
             "queryWithDate": ""
         },
         "username3": {
+            "authorized": true,
             "id": "7a375fe2-5880-4da4-b6d9-597dd730030c",
             "password": "pwd",
             "querys": {},
             "queryWithDate": ""
         },
         "wawa": {
+            "authorized": false,
             "id": "e4afcfb9-6398-4399-9be5-01e8875bddeb",
             "password": "wawa",
             "querys": {},
             "queryWithDate": ""
+        },
+        "a": {
+            "id": "6fe66417-9094-4d62-be33-7d5a52a5a3cd",
+            "password": "a",
+            "querys": {
+                "0": "aaaaaaaaaaaa",
+                "1": "qqqqq",
+                "2": "qqqqq",
+                "3": "aaaaaaaaaaaaa"
+            },
+            "queryWithDate": "select * from data where x<%F% and x>%T%",
+            "authorized": true
         }
     },
-    "totalQuerys": 10
+    "totalQuerys": 4
 }

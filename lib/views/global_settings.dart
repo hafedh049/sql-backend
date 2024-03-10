@@ -11,27 +11,22 @@ import 'package:sql_admin/utils/shared.dart';
 import '../../../utils/callbacks.dart';
 
 class GlobalSettings extends StatefulWidget {
-  const GlobalSettings({super.key});
+  const GlobalSettings({super.key, required this.callback});
+  final void Function(void Function()) callback;
   @override
   State<GlobalSettings> createState() => _EditUserState();
 }
 
 class _EditUserState extends State<GlobalSettings> {
-  final GlobalKey<State> _passKey = GlobalKey<State>();
-  bool _buttonState = false;
-
   final TextEditingController _globalQueries = TextEditingController();
 
   Future<void> _settings() async {
-    _buttonState = false;
-
     if (_globalQueries.text.isEmpty) {
       showToast("Please fill all the settings fields", redColor);
     } else {
-      _buttonState = true;
       try {
         await Dio().post(
-          "http://192.168.0.179:4444/totalQuerys",
+          "$url/totalQuerys",
           data: <String, dynamic>{"totalQuerys": int.parse(_globalQueries.text)},
         );
         showToast("SETTINGS UPDATED", greenColor);
@@ -40,12 +35,13 @@ class _EditUserState extends State<GlobalSettings> {
       }
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
+      widget.callback(() {});
     }
   }
 
   @override
   void initState() {
-    Dio().get("http://192.168.0.179:4444/totalQuerys").then((Response value) => _globalQueries.text = value.data["totalQuerys"].toString());
+    Dio().get("$url/totalQuerys").then((Response value) => _globalQueries.text = value.data["totalQuerys"].toString());
     super.initState();
   }
 
@@ -71,7 +67,7 @@ class _EditUserState extends State<GlobalSettings> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text("Welcome", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: blackColor)),
+                Text("Global Settings", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: blackColor)),
                 Container(width: MediaQuery.sizeOf(context).width, height: .3, color: blackColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 const SizedBox(height: 20),
                 Container(
@@ -99,34 +95,38 @@ class _EditUserState extends State<GlobalSettings> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                StatefulBuilder(
-                  key: _passKey,
-                  builder: (BuildContext context, void Function(void Function()) _) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        IgnorePointer(
-                          ignoring: _buttonState,
-                          child: AnimatedButton(
-                            width: 150,
-                            height: 40,
-                            text: _buttonState ? "WAIT..." : 'CONTINUE',
-                            selectedTextColor: purpleColor,
-                            animatedOn: AnimatedOn.onHover,
-                            animationDuration: 500.ms,
-                            isReverse: true,
-                            selectedBackgroundColor: blackColor,
-                            backgroundColor: purpleColor,
-                            transitionType: TransitionType.TOP_TO_BOTTOM,
-                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                            onPress: () async => await _settings(),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        AnimatedOpacity(opacity: _buttonState ? 1 : 0, duration: 300.ms, child: const Icon(FontAwesome.bookmark_solid, color: purpleColor, size: 35)),
-                      ],
-                    );
-                  },
+                Row(
+                  children: <Widget>[
+                    AnimatedButton(
+                      width: 150,
+                      height: 40,
+                      text: 'SAVE SETTINGS',
+                      selectedTextColor: purpleColor,
+                      animatedOn: AnimatedOn.onHover,
+                      animationDuration: 500.ms,
+                      isReverse: true,
+                      selectedBackgroundColor: blackColor,
+                      backgroundColor: purpleColor,
+                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                      onPress: () async => await _settings(),
+                    ),
+                    const Spacer(),
+                    AnimatedButton(
+                      width: 150,
+                      height: 40,
+                      text: 'CANCEL',
+                      selectedTextColor: whiteColor,
+                      animatedOn: AnimatedOn.onHover,
+                      animationDuration: 500.ms,
+                      isReverse: true,
+                      selectedBackgroundColor: redColor,
+                      backgroundColor: blackColor,
+                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                      onPress: () => Navigator.pop(context),
+                    ),
+                  ],
                 ),
               ],
             ),

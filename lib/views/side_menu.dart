@@ -8,8 +8,8 @@ import '../utils/shared.dart';
 import 'global_settings.dart';
 
 class SideMenu extends StatefulWidget {
-  const SideMenu({super.key});
-
+  const SideMenu({super.key, required this.callback});
+  final void Function(void Function()) callback;
   @override
   State<SideMenu> createState() => _SideMenuState();
 }
@@ -36,7 +36,7 @@ class _SideMenuState extends State<SideMenu> {
               backgroundColor: blackColor,
               transitionType: TransitionType.TOP_TO_BOTTOM,
               textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-              onPress: () => showModalBottomSheet(context: context, builder: (BuildContext context) => const AddUser()),
+              onPress: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: AddUser(callback: widget.callback))),
             ),
             const SizedBox(height: 20),
             AnimatedButton(
@@ -50,7 +50,7 @@ class _SideMenuState extends State<SideMenu> {
               backgroundColor: blackColor,
               transitionType: TransitionType.TOP_TO_BOTTOM,
               textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-              onPress: () => showModalBottomSheet(context: context, builder: (BuildContext context) => const GlobalSettings()),
+              onPress: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: GlobalSettings(callback: widget.callback))),
             ),
           ],
         ),
