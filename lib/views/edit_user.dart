@@ -74,7 +74,7 @@ class _EditUserState extends State<EditUser> {
   }
 
   Future<int> _load() async {
-    final response = await Dio().get("$url/totalQuerys");
+    final Response response = await Dio().get("$url/totalQuerys");
     if (response.statusCode == 200) {
       return response.data['totalQuerys'];
     }
@@ -176,7 +176,7 @@ class _EditUserState extends State<EditUser> {
                           "controller": TextEditingController(),
                         },
                       );
-                      for (final MapEntry<String, dynamic> itm in widget.user.queries.entries) {
+                      for (final MapEntry<String, dynamic> itm in widget.user.queries.entries.take(snapshot.data!)) {
                         _queriesControllers[int.parse(itm.key)]["controller"].text = itm.value;
                       }
                       return Column(
