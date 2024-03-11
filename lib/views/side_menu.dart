@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_animated_button/flutter_animated_button.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sql_admin/views/add_user.dart';
 
 import '../utils/shared.dart';
@@ -9,7 +6,7 @@ import 'global_settings.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key, required this.callback});
-  final void Function(void Function()) callback;
+  final void Function() callback;
   @override
   State<SideMenu> createState() => _SideMenuState();
 }
@@ -25,32 +22,28 @@ class _SideMenuState extends State<SideMenu> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AnimatedButton(
-              height: 40,
-              text: "ADD USER",
-              selectedTextColor: whiteColor,
-              animatedOn: AnimatedOn.onHover,
-              animationDuration: 500.ms,
-              isReverse: true,
-              selectedBackgroundColor: purpleColor,
-              backgroundColor: blackColor,
-              transitionType: TransitionType.TOP_TO_BOTTOM,
-              textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-              onPress: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: AddUser(callback: widget.callback))),
+            InkWell(
+              splashColor: transparentColor,
+              hoverColor: transparentColor,
+              highlightColor: transparentColor,
+              onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: AddUser(callback: widget.callback))),
+              child: Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                padding: const EdgeInsets.all(16),
+                child: const Text('ADD USER'),
+              ),
             ),
             const SizedBox(height: 20),
-            AnimatedButton(
-              height: 40,
-              text: "GLOBAL SETTINGS",
-              selectedTextColor: whiteColor,
-              animatedOn: AnimatedOn.onHover,
-              animationDuration: 500.ms,
-              isReverse: true,
-              selectedBackgroundColor: purpleColor,
-              backgroundColor: blackColor,
-              transitionType: TransitionType.TOP_TO_BOTTOM,
-              textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-              onPress: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: GlobalSettings(callback: widget.callback))),
+            InkWell(
+              splashColor: transparentColor,
+              hoverColor: transparentColor,
+              highlightColor: transparentColor,
+              onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: GlobalSettings(callback: widget.callback))),
+              child: Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                padding: const EdgeInsets.all(16),
+                child: const Text("GLOBAL SETTINGS"),
+              ),
             ),
           ],
         ),

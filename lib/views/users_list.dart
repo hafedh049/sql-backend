@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sql_admin/models/user_model.dart';
 import '../utils/helpers/data_sources.dart';
 import '../utils/shared.dart';
+import 'side_menu.dart';
 
 class UsersList extends StatefulWidget {
   const UsersList({super.key});
@@ -31,7 +32,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
     registerForRestoration(_rowsPerPage, 'rows_per_page');
 
     if (!_initialized) {
-      _productsDataSource = UsersDataSource(context, _products);
+      _productsDataSource = UsersDataSource(context, _products, () => setState(() {}));
       _initialized = true;
     }
   }
@@ -40,7 +41,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      _productsDataSource = UsersDataSource(context, _products);
+      _productsDataSource = UsersDataSource(context, _products, () => setState(() {}));
       _initialized = true;
     }
   }
@@ -62,7 +63,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
                 'uid': e.value["id"],
                 'username': e.key,
                 'password': e.value["password"],
-                'authorized': e.value["authorized"] ?? false,
+                'authorized': e.value["authorized"],
                 'queries': e.value["querys"],
                 'queryWithDate': e.value["queryWithDate"],
               },
@@ -70,42 +71,53 @@ class UsersListState extends State<UsersList> with RestorationMixin {
           )
           .toList();
     } catch (e) {
-      print(e);
       return [];
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<UserModel>>(
-      future: _loadUsers(),
-      builder: (BuildContext context, AsyncSnapshot<List<UserModel>> snapshot) {
-        if (snapshot.hasData) {
-          _products = snapshot.data!;
-          _productsDataSource = UsersDataSource(context, _products);
-          return ListView(
-            restorationId: restorationId,
-            children: <Widget>[
-              StatefulBuilder(
-                key: _pagerKey,
-                builder: (BuildContext context, void Function(void Function()) _) {
-                  return PaginatedDataTable(
-                    availableRowsPerPage: const <int>[20, 30],
-                    arrowHeadColor: purpleColor,
-                    rowsPerPage: _rowsPerPage.value,
-                    onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
-                    initialFirstRowIndex: _rowIndex.value,
-                    onPageChanged: (int rowIndex) => _(() => _rowIndex.value = rowIndex),
-                    columns: <DataColumn>[for (final String column in _columns) DataColumn(label: Text(column))],
-                    source: _productsDataSource,
+    return Scaffold(
+      backgroundColor: whiteColor,
+      body: Row(
+        children: <Widget>[
+          Expanded(
+            child: FutureBuilder<List<UserModel>>(
+              future: _loadUsers(),
+              builder: (BuildContext context, AsyncSnapshot<List<UserModel>> snapshot) {
+                if (snapshot.hasData) {
+                  _products = snapshot.data!;
+                  _productsDataSource = UsersDataSource(context, _products, () => setState(() {}));
+                  return ListView(
+                    restorationId: restorationId,
+                    children: <Widget>[
+                      StatefulBuilder(
+                        key: _pagerKey,
+                        builder: (BuildContext context, void Function(void Function()) _) {
+                          return PaginatedDataTable(
+                            availableRowsPerPage: const <int>[20, 30],
+                            arrowHeadColor: purpleColor,
+                            rowsPerPage: _rowsPerPage.value,
+                            onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
+                            initialFirstRowIndex: _rowIndex.value,
+                            onPageChanged: (int rowIndex) => _(() => _rowIndex.value = rowIndex),
+                            columns: <DataColumn>[for (final String column in _columns) DataColumn(label: Text(column))],
+                            source: _productsDataSource,
+                          );
+                        },
+                      ),
+                    ],
                   );
-                },
-              ),
-            ],
-          );
-        }
-        return snapshot.connectionState == ConnectionState.waiting ? const Center(child: CircularProgressIndicator(color: purpleColor)) : Center(child: Text(snapshot.error.toString()));
-      },
+                }
+                return snapshot.connectionState == ConnectionState.waiting ? const Center(child: CircularProgressIndicator(color: purpleColor)) : Center(child: Text(snapshot.error.toString()));
+              },
+            ),
+          ),
+          const SizedBox(width: 20),
+          const SizedBox(width: 20),
+          SideMenu(callback: () => setState(() {})),
+        ],
+      ),
     );
   }
 }

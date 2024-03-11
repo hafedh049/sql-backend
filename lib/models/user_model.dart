@@ -1,15 +1,12 @@
-import 'package:flutter/material.dart';
-
-@immutable
 final class UserModel {
-  const UserModel(this.uid, this.username, this.password, this.authorized, this.queries, this.queryWithDate);
+  UserModel(this.uid, this.username, this.password, this.authorized, this.queries, this.queryWithDate);
 
-  final String uid;
-  final String username;
-  final String password;
-  final bool authorized;
-  final Map<String, dynamic> queries;
-  final String queryWithDate;
+  String uid;
+  String username;
+  String password;
+  bool authorized;
+  Map<String, dynamic> queries;
+  String queryWithDate;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         json['uid'] as String,

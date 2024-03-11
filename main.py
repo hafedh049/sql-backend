@@ -75,7 +75,7 @@ def userExist(username: str, password: str) -> bool:
     data = loadJsonData(dataFile)["users"]
     if username in list(data.keys()):
         if password == data[username]["password"]:
-            return True, data[username]["id"]
+            return True, data[username]
         else:
             return False, "Wrong Password"
     else:
@@ -211,6 +211,7 @@ def totalQuerys():
 @app.route("/login", methods=["POST"])
 def login():
     user_data = request.json
+    print(user_data)
     keys = list(user_data.keys())
     if "username" in keys and "password" in keys:
         username = user_data["username"]
@@ -218,14 +219,14 @@ def login():
         userResponce, userID = userExist(username, password)
         # print(f'{username} - {password}')
         if userResponce == True:
-            result = {"status": userResponce, "id": userID}
+            result = {"status": userResponce, "data": userID}
             return jsonify(result), 200
         else:
             result = {"status": userResponce, "message": userID}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         result = {"status": False, "message": "username or password is missing"}
-        return jsonify(result), 404
+        return jsonify(result), 202
 
 
 @app.route("/createUser", methods=["POST"])
@@ -242,10 +243,10 @@ def createUserWeb():
             return jsonify(result), 200
         else:
             result = {"status": userResponce, "message": userID}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         result = {"status": False, "message": "username or password is missing"}
-        return jsonify(result), 404
+        return jsonify(result), 202
 
 
 @app.route("/getUserQuerys", methods=["GET"])
@@ -260,27 +261,10 @@ def getUserQuerys():
             return jsonify(result), 200
         else:
             result = {"status": userResponce, "message": Querys}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         result = {"status": False, "message": "username is missing"}
-        return jsonify(result), 404
-
-
-"""
-userResponce, Querys = updateOrAddQuery(username, QueryID, newValue)
-if userResponce == True:
-  result = {
-    'status': userResponce,
-    'Querys': Querys
-  }
-  return jsonify(result), 200
-else:
-      result = {
-        'status': userResponce,
-        'message': Querys
-      }
-      return jsonify(result), 404
-"""
+        return jsonify(result), 202
 
 
 @app.route("/addOrUpdateUserQuerys", methods=["POST"])
@@ -296,10 +280,10 @@ def addOrUpdateUserQuerys():
             return jsonify(result), 200
         else:
             result = {"status": userResponce}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         result = {"status": False, "message": "username or querys is missing"}
-        return jsonify(result), 404
+        return jsonify(result), 202
 
 
 @app.route("/queryWithTime", methods=["GET", "POST"])
@@ -316,10 +300,10 @@ def queryWithTime():
                 return jsonify(result), 200
             else:
                 result = {"status": userResponce, "message": Query}
-                return jsonify(result), 404
+                return jsonify(result), 202
         else:
             result = {"status": False, "message": "username or newValue is missing"}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         if "username" in keys:
             username = user_data["username"]
@@ -329,10 +313,10 @@ def queryWithTime():
                 return jsonify(result), 200
             else:
                 result = {"status": userResponce, "message": Query}
-                return jsonify(result), 404
+                return jsonify(result), 202
         else:
             result = {"status": False, "message": "username is missing"}
-            return jsonify(result), 404
+            return jsonify(result), 202
 
 
 @app.route("/getUsersList", methods=["GET"])
@@ -353,10 +337,10 @@ def getUserData():
             return jsonify(result), 200
         else:
             result = {"status": False, "message": "user not exist"}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         result = {"status": False, "message": "username is missing"}
-        return jsonify(result), 404
+        return jsonify(result), 202
 
 
 @app.route("/authorization", methods=["POST"])
@@ -393,10 +377,10 @@ def authorization():
             return jsonify(result), 200
         else:
             result = {"status": False, "message": "user not exist"}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         result = {"status": False, "message": "username is missing"}
-        return jsonify(result), 404
+        return jsonify(result), 202
 
 
 @app.route("/removeUser", methods=["POST"])
@@ -411,14 +395,15 @@ def removeUser():
             return jsonify(result), 200
         else:
             result = {"status": False, "message": "user not exist"}
-            return jsonify(result), 404
+            return jsonify(result), 202
     else:
         result = {"status": False, "message": "username is missing"}
-        return jsonify(result), 404
+        return jsonify(result), 202
 
 
-app.run(host="0.0.0.0", port=80)
+app.run(host="0.0.0.0", port=4444, debug=True)
 
 """
-réfrésh fl auth,add usér, délété usér, édit usér
+logo
+logo, output the querys (select from table) : toast (insert,update,delete), queryWithDateAndTime
 """

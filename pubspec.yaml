@@ -19,7 +19,6 @@ dependencies:
   flutter_zoom_drawer: ^3.2.0
   data_table_2: ^2.5.11
   icons_plus: ^5.0.0
-  flutter_animated_button: ^2.0.3
   animated_loading_border: ^0.0.2
   dio: ^5.4.1
 

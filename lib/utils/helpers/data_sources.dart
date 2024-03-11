@@ -33,8 +33,8 @@ class UsersDataSource extends DataTableSource {
     users = <UserModel>[];
   }
 
-  UsersDataSource(this.context, this.users);
-
+  UsersDataSource(this.context, this.users, this.callback);
+  void Function() callback = () {};
   final BuildContext context;
   late List<UserModel> users;
   final bool hasRowTaps = false;
@@ -52,15 +52,15 @@ class UsersDataSource extends DataTableSource {
       cells: <DataCell>[
         DataCell(
           Text(user.uid),
-          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))),
+          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))).then((void value) => callback()),
         ),
         DataCell(
           Text(user.username),
-          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))),
+          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))).then((void value) => callback()),
         ),
         DataCell(
           Text(user.password),
-          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))),
+          onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))).then((void value) => callback()),
         ),
         DataCell(
           Container(
@@ -68,8 +68,13 @@ class UsersDataSource extends DataTableSource {
             decoration: BoxDecoration(color: user.authorized ? greenColor : redColor, borderRadius: BorderRadius.circular(5)),
             child: Text(user.authorized ? "AUTHORIZED" : "UNAUTHORIZED"),
           ),
-          onTap: () {
-            Dio().post("$url/authorization", data: {"username": user.username});
+          onTap: () async {
+            await Dio().post("$url/authorization", data: <String, String>{"username": user.username}).then(
+              (Response value) {
+                user.authorized = value.data["data"]['authorized'];
+                callback();
+              },
+            );
           },
         ),
       ],
