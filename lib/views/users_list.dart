@@ -114,7 +114,6 @@ class UsersListState extends State<UsersList> with RestorationMixin {
             ),
           ),
           const SizedBox(width: 20),
-          const SizedBox(width: 20),
           SideMenu(callback: () => setState(() {})),
         ],
       ),

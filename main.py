@@ -402,8 +402,3 @@ def removeUser():
 
 
 app.run(host="0.0.0.0", port=4444, debug=True)
-
-"""
-logo
-logo, output the querys (select from table) : toast (insert,update,delete), queryWithDateAndTime
-"""

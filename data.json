@@ -8,7 +8,7 @@
                 "0": "select * from user",
                 "1": "select * from clients"
             },
-            "queryWithDate": "select * from data where x<%FROM% and x>%TO%"
+            "queryWithDate": "select * from data where x between /FROM/ and  /TO/"
         },
         "username3": {
             "authorized": false,
