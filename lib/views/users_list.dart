@@ -78,7 +78,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: whiteColor,
+      backgroundColor: blackColor,
       body: Row(
         children: <Widget>[
           Expanded(
@@ -96,7 +96,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
                         builder: (BuildContext context, void Function(void Function()) _) {
                           return PaginatedDataTable(
                             availableRowsPerPage: const <int>[20, 30],
-                            arrowHeadColor: purpleColor,
+                            arrowHeadColor: blueColor,
                             rowsPerPage: _rowsPerPage.value,
                             onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
                             initialFirstRowIndex: _rowIndex.value,
@@ -109,7 +109,7 @@ class UsersListState extends State<UsersList> with RestorationMixin {
                     ],
                   );
                 }
-                return snapshot.connectionState == ConnectionState.waiting ? const Center(child: CircularProgressIndicator(color: purpleColor)) : Center(child: Text(snapshot.error.toString()));
+                return snapshot.connectionState == ConnectionState.waiting ? const Center(child: CircularProgressIndicator(color: blueColor)) : Center(child: Text(snapshot.error.toString()));
               },
             ),
           ),

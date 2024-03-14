@@ -35,9 +35,9 @@ class _EditUserState extends State<EditUser> {
 
   Future<void> _updateUser() async {
     if (_passwordController.text.isEmpty) {
-      showToast("Please enter a correct password", redColor);
+      showToast(context, "Please enter a correct password", redColor);
     } else if (_usernameController.text.isEmpty) {
-      showToast("Please enter a correct username", redColor);
+      showToast(context, "Please enter a correct username", redColor);
     } else {
       await Dio().post(
         '$url/addOrUpdateUserQuerys',
@@ -56,7 +56,8 @@ class _EditUserState extends State<EditUser> {
           'newValue': _queriesDate.text,
         },
       );
-      showToast("User Edited", greenColor);
+      // ignore: use_build_context_synchronously
+      showToast(context, "User Edited", greenColor);
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
     }
@@ -88,9 +89,9 @@ class _EditUserState extends State<EditUser> {
         padding: const EdgeInsets.all(16),
         child: AnimatedLoadingBorder(
           borderWidth: 4,
-          borderColor: purpleColor,
+          borderColor: blueColor,
           child: Container(
-            color: purpleColor.withOpacity(.3),
+            color: blueColor.withOpacity(.3),
             width: MediaQuery.sizeOf(context).width * .7,
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -111,55 +112,55 @@ class _EditUserState extends State<EditUser> {
                         Navigator.pop(context);
                       },
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: blueColor),
                         padding: const EdgeInsets.all(16),
-                        child: const Text('DELETE USER'),
+                        child: Text('DELETE USER', style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       ),
                     ),
                   ],
                 ),
                 Container(width: MediaQuery.sizeOf(context).width, height: .3, color: blackColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 Container(
-                  decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
+                  decoration: BoxDecoration(color: blueColor.withOpacity(.1), borderRadius: BorderRadius.circular(3)),
                   child: StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return TextField(
                         onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                         controller: _usernameController,
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(20),
-                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: blueColor, width: 2, style: BorderStyle.solid)),
                           border: InputBorder.none,
                           hintText: 'Username',
-                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                           prefixIcon: _usernameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                         ),
-                        cursorColor: purpleColor,
+                        cursorColor: blueColor,
                       );
                     },
                   ),
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
+                  decoration: BoxDecoration(color: blueColor.withOpacity(.1), borderRadius: BorderRadius.circular(3)),
                   child: StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return TextField(
                         obscureText: !_passwordState,
                         onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                         controller: _passwordController,
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(20),
-                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: blueColor, width: 2, style: BorderStyle.solid)),
                           border: InputBorder.none,
                           hintText: 'Password',
-                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                           prefixIcon: _passwordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                          suffixIcon: IconButton(onPressed: () => _(() => _passwordState = !_passwordState), icon: Icon(_passwordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
+                          suffixIcon: IconButton(onPressed: () => _(() => _passwordState = !_passwordState), icon: Icon(_passwordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: blueColor)),
                         ),
-                        cursorColor: purpleColor,
+                        cursorColor: blueColor,
                       );
                     },
                   ),
@@ -185,22 +186,22 @@ class _EditUserState extends State<EditUser> {
                         children: <Widget>[
                           for (final Map<String, dynamic> item in _queriesControllers) ...<Widget>[
                             Container(
-                              decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
+                              decoration: BoxDecoration(color: blueColor.withOpacity(.1), borderRadius: BorderRadius.circular(3)),
                               child: StatefulBuilder(
                                 builder: (BuildContext context, void Function(void Function()) _) {
                                   return TextField(
                                     onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                                     controller: item["controller"],
-                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.all(20),
-                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: blueColor, width: 2, style: BorderStyle.solid)),
                                       border: InputBorder.none,
                                       hintText: item["hint"],
-                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                                       prefixIcon: item["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                     ),
-                                    cursorColor: purpleColor,
+                                    cursorColor: blueColor,
                                   );
                                 },
                               ),
@@ -214,22 +215,22 @@ class _EditUserState extends State<EditUser> {
                   },
                 ),
                 Container(
-                  decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
+                  decoration: BoxDecoration(color: blueColor.withOpacity(.1), borderRadius: BorderRadius.circular(3)),
                   child: StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return TextField(
                         onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                         controller: _queriesDate,
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(20),
-                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: blueColor, width: 2, style: BorderStyle.solid)),
                           border: InputBorder.none,
                           hintText: 'Date Query',
-                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                           prefixIcon: _queriesDate.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                         ),
-                        cursorColor: purpleColor,
+                        cursorColor: blueColor,
                       );
                     },
                   ),
@@ -243,9 +244,9 @@ class _EditUserState extends State<EditUser> {
                       highlightColor: transparentColor,
                       onTap: () async => await _updateUser(),
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: blueColor),
                         padding: const EdgeInsets.all(16),
-                        child: const Text('SAVE DATA'),
+                        child: Text('SAVE DATA', style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       ),
                     ),
                     const Spacer(),
@@ -257,7 +258,7 @@ class _EditUserState extends State<EditUser> {
                       child: Container(
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
                         padding: const EdgeInsets.all(16),
-                        child: const Text('CANCEL'),
+                        child: Text('CANCEL', style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       ),
                     ),
                   ],

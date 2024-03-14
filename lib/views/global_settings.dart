@@ -20,11 +20,12 @@ class _EditUserState extends State<GlobalSettings> {
 
   Future<void> _settings() async {
     if (_globalQueries.text.isEmpty) {
-      showToast("Please fill all the settings fields", redColor);
+      showToast(context, "Please fill all the settings fields", redColor);
     } else {
       try {
         await Dio().post("$url/totalQuerys", data: <String, dynamic>{"totalQuerys": int.parse(_globalQueries.text)});
-        showToast("SETTINGS UPDATED", greenColor);
+        // ignore: use_build_context_synchronously
+        showToast(context, "SETTINGS UPDATED", greenColor);
       } catch (e) {
         debugPrint(e.toString());
       }
@@ -53,9 +54,9 @@ class _EditUserState extends State<GlobalSettings> {
         padding: const EdgeInsets.all(16),
         child: AnimatedLoadingBorder(
           borderWidth: 4,
-          borderColor: purpleColor,
+          borderColor: blueColor,
           child: Container(
-            color: purpleColor.withOpacity(.3),
+            color: blueColor.withOpacity(.3),
             width: MediaQuery.sizeOf(context).width * .7,
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -66,25 +67,25 @@ class _EditUserState extends State<GlobalSettings> {
                 Container(width: MediaQuery.sizeOf(context).width, height: .3, color: blackColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 const SizedBox(height: 20),
                 Container(
-                  decoration: BoxDecoration(color: blackColor, borderRadius: BorderRadius.circular(3)),
+                  decoration: BoxDecoration(color: blueColor.withOpacity(.1), borderRadius: BorderRadius.circular(3)),
                   child: StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return TextField(
                         onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                         controller: _globalQueries,
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                         inputFormatters: [LengthLimitingTextInputFormatter(2), FilteringTextInputFormatter.digitsOnly],
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(20),
-                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: blueColor, width: 2, style: BorderStyle.solid)),
                           border: InputBorder.none,
                           labelText: "Queries Number",
-                          labelStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                          labelStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                           hintText: "Queries Number",
-                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor),
                           prefixIcon: _globalQueries.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                         ),
-                        cursorColor: purpleColor,
+                        cursorColor: blueColor,
                       );
                     },
                   ),
@@ -98,9 +99,9 @@ class _EditUserState extends State<GlobalSettings> {
                       highlightColor: transparentColor,
                       onTap: () async => await _settings(),
                       child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: blueColor),
                         padding: const EdgeInsets.all(16),
-                        child: const Text('SAVE SETTINGS'),
+                        child: Text('SAVE SETTINGS', style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       ),
                     ),
                     const Spacer(),
@@ -112,7 +113,7 @@ class _EditUserState extends State<GlobalSettings> {
                       child: Container(
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
                         padding: const EdgeInsets.all(16),
-                        child: const Text('CANCEL'),
+                        child: Text('CANCEL', style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       ),
                     ),
                   ],

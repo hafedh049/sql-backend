@@ -12,7 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  fluttertoast: ^8.2.4
   http: ^1.2.1
   flutter_animate: ^4.5.0
   google_fonts: ^6.2.1
@@ -21,6 +20,7 @@ dependencies:
   icons_plus: ^5.0.0
   animated_loading_border: ^0.0.2
   dio: ^5.4.1
+  toastification: ^1.2.1
 
 dev_dependencies:
   flutter_test:

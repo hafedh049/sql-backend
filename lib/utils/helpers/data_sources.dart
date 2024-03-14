@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sql_admin/utils/shared.dart';
 
 import '../../models/user_model.dart';
@@ -51,22 +52,22 @@ class UsersDataSource extends DataTableSource {
       color: color != null ? MaterialStateProperty.all(color) : (hasZebraStripes && index.isEven ? MaterialStateProperty.all(Theme.of(context).highlightColor) : null),
       cells: <DataCell>[
         DataCell(
-          Text(user.uid),
+          Text(user.uid, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor)),
           onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))).then((void value) => callback()),
         ),
         DataCell(
-          Text(user.username),
+          Text(user.username, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor)),
           onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))).then((void value) => callback()),
         ),
         DataCell(
-          Text(user.password),
+          Text(user.password, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blackColor)),
           onTap: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: EditUser(user: user))).then((void value) => callback()),
         ),
         DataCell(
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(color: user.authorized ? greenColor : redColor, borderRadius: BorderRadius.circular(5)),
-            child: Text(user.authorized ? "AUTHORIZED" : "UNAUTHORIZED"),
+            child: Text(user.authorized ? "AUTHORIZED" : "UNAUTHORIZED", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
           ),
           onTap: () async {
             await Dio().post("$url/authorization", data: <String, String>{"username": user.username}).then(

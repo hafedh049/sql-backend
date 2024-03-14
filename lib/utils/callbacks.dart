@@ -1,18 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:sql_admin/utils/shared.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:toastification/toastification.dart';
 
-void showToast(String message, Color color) {
-  Fluttertoast.showToast(
-    msg: message,
-    backgroundColor: color,
-    fontSize: 16,
-    textColor: blackColor,
-    timeInSecForIosWeb: 2,
-    webPosition: "right",
-    webShowClose: true,
-    toastLength: Toast.LENGTH_LONG,
-    gravity: ToastGravity.BOTTOM_RIGHT,
-    webBgColor: "rgb(${color.red},${color.green},${color.blue})",
-  );
+void showToast(BuildContext context, String message, Color color) {
+  toastification.show(context: context, title: Text(message), autoCloseDuration: 3.seconds);
 }

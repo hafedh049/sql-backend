@@ -19,7 +19,7 @@ class Main extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const UsersList(),
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
     );
   }
 }
